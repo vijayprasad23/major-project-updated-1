@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.damaged)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageName)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -37,9 +40,12 @@
                 @Html.DisplayFor(modelItem => item.damaged)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ImageName)
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> 
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 @if (item.availability == true)
                 {
                     <a asp-action="create">
@@ -48,9 +54,9 @@
                 }
                 else
                 {
-                     <a asp-action="return">
-                         <input type="submit" value="Return" class="btn btn-primary" />
-                     </a>
+                    <a asp-action="return">
+                        <input type="submit" value="Return" class="btn btn-primary" />
+                    </a>
                 }
             </td>
         </tr>

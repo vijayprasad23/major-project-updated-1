@@ -9,16 +9,20 @@ using major_project.Data;
 using major_project.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace major_project.Controllers
 {
     public class attiresController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public attiresController(ApplicationDbContext context)
+        public attiresController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: attires
@@ -58,10 +62,24 @@ namespace major_project.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-       public async Task<IActionResult> Create([Bind("ID,attire,availability,damaged")] attires attires)
-        {
+       public async Task<IActionResult> Create([Bind("ID,attire,availability,damaged,ImageName,AttireImage")] attires attires)
+        {          
+            
             if (ModelState.IsValid)
             {
+                //saving image to the images folder in the wwwroot
+
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string fileName = Path.GetFileNameWithoutExtension(attires.AttireImage.FileName);
+                string extension = Path.GetExtension(attires.AttireImage.FileName);
+                attires.ImageName = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                string path = Path.Combine(wwwRootPath + "/Images/" + fileName);
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await attires.AttireImage.CopyToAsync(fileStream);
+                }
+
+                //inserting record to the database
                 _context.Add(attires);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -93,7 +111,7 @@ namespace major_project.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Edit(int id, [Bind("ID,attire,availability,damaged")] attires attires)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,attire,availability,damaged,ImageName,AttireImage")] attires attires)
         {
             if (id != attires.ID)
             {
@@ -172,6 +190,16 @@ namespace major_project.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var attires = await _context.attires.FindAsync(id);
+
+            //Delete the image from the wwwroot/images folder
+
+            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "Images", attires.ImageName);
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
+            
+            //Delete the record from the database
             _context.attires.Remove(attires);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
