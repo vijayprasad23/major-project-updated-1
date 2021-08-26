@@ -1,0 +1,59 @@
+﻿@model IEnumerable<major_project.Models.attires>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.attire)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.availability)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.damaged)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.attire)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.availability)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.damaged)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> 
+                @if (item.availability == true)
+                {
+                    <a asp-action="create">
+                        <input type="submit" value="Borrow" class="btn btn-primary" />
+                    </a>
+                }
+                else
+                {
+                     <a asp-action="return">
+                         <input type="submit" value="Return" class="btn btn-primary" />
+                     </a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

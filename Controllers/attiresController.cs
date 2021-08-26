@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using major_project.Data;
 using major_project.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace major_project.Controllers
 {
@@ -57,7 +58,7 @@ namespace major_project.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,attire,availability")] attires attires)
+       public async Task<IActionResult> Create([Bind("ID,attire,availability,damaged")] attires attires)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +68,7 @@ namespace major_project.Controllers
             }
             return View(attires);
         }
-
+        
         // GET: attires/Edit/5
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
@@ -92,7 +93,7 @@ namespace major_project.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Edit(int id, [Bind("ID,attire,availability")] attires attires)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,attire,availability,damaged")] attires attires)
         {
             if (id != attires.ID)
             {
@@ -130,6 +131,10 @@ namespace major_project.Controllers
 
             return View("Index", await _context.attires.Where(a => a.attire.Contains(SearchPhrase)).ToListAsync());
         }
+        public async Task<IActionResult> BorrowGears()
+        {
+            return View();
+        }
         public async Task<IActionResult> returngears()
         {
             return View(); 
@@ -142,6 +147,7 @@ namespace major_project.Controllers
 
         // GET: attires/Delete/5
         [Authorize]
+        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

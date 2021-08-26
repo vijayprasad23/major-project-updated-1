@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using major_project.Data;
 
-namespace major_project.Data.Migrations
+namespace major_project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210823022806_addnamecolumn")]
-    partial class addnamecolumn
+    [Migration("20210825034316_initialsetup")]
+    partial class initialsetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -229,13 +229,14 @@ namespace major_project.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("attire")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("availability")
                         .HasColumnType("bit");
 
-                    b.Property<string>("name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("damaged")
+                        .HasColumnType("bit");
 
                     b.HasKey("ID");
 
