@@ -48,7 +48,7 @@
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 @if (item.availability == true)
                 {
-                    <a asp-action="create">
+                    <a asp-action="BorrowGears">
                         <input type="submit" value="Borrow" class="btn btn-primary" />
                     </a>
                 }
