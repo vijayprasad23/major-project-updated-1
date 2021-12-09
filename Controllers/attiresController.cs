@@ -33,43 +33,51 @@ namespace major_project.Controllers
         {
             return View(await _context.attires.ToListAsync());
         }
-
-
+        [HttpGet]
+        public IActionResult BorrowGears()
+        {
+              ViewData["attire"] = new SelectList(_context.attires, "attire", "attire");
+              return View();
+        }
         //Borrow Gears
         [HttpPost]
         public async Task<IActionResult> BorrowGears(attires attires)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(attires);
             }
 
             //Send Email using Gmail SMTP
-            using(var client = new SmtpClient())
-            {
-                client.Connect("smtp.gmail.com"); //if you want to use your school email, you will need to get the smtp connect for your school... 
-                client.Authenticate("YourEmail", "YourPassword");
+            //using (var client = new SmtpClient())
+            //{
+            //    client.Connect("smtp.gmail.com"); //if you want to use your school email, you will need to get the smtp connect for your school... 
+            //    client.Authenticate("YourEmail", "YourPassword");
 
-                //message body that will be sent in the email. 
-                var bodyBuilder = new BodyBuilder
-                {
-                    HtmlBody = $"<p>{ attires.attire } </p> <p>{ attires.availability } </p> <p>{ attires.ImageName } </p> <p>{ attires.AttireImage } </p> ",
-                    TextBody = "{ attires.attire } \r\n { attires.availability } \r\n {attires.ImageName } \r\n {attires.AttireImage }"
-                };
+            //    //message body that will be sent in the email. 
+            //    var bodyBuilder = new BodyBuilder
+            //    {
+            //        HtmlBody = $"<p>{ attires.attire } </p> <p>{ attires.availability } </p> <p>{ attires.ImageName } </p> <p>{ attires.AttireImage } </p> ",
+            //        TextBody = "{ attires.attire } \r\n { attires.availability } \r\n {attires.ImageName } \r\n {attires.AttireImage }"
+            //    };
 
-                var message = new MimeMessage
-                {
-                    Body = bodyBuilder.ToMessageBody()
-                };
-                message.From.Add(new MailboxAddress("Noreply Hillcrest_Drama", "YourEmail")); //Use your email address here. It should be same use used for client.authenticate above...
-                message.To.Add(new MailboxAddress("Testing Borrow", User.Identity.Name)); //user.identity.name is pulling the email of the logged in user.
-                message.Subject = "New item borrow confirmation";
-                client.Send(message);
-                client.Disconnect(true);
+            //    var message = new MimeMessage
+            //    {
+            //        Body = bodyBuilder.ToMessageBody()
+            //    };
+            //    message.From.Add(new MailboxAddress("Noreply Hillcrest_Drama", "YourEmail")); //Use your email address here. It should be same use used for client.authenticate above...
+            //    message.To.Add(new MailboxAddress("Testing Borrow", User.Identity.Name)); //user.identity.name is pulling the email of the logged in user.
+            //    message.Subject = "New item borrow confirmation";
+            //    client.Send(message);
+            //    client.Disconnect(true);
 
-            }           
+            //}
+
             
-            return RedirectToAction("Index"); //decided which page you want to redirect and also try and pass a suitable message that the form is submitted
+            _context.Update(attires);
+            await _context.SaveChangesAsync(attires.availability = false);
+            return RedirectToAction("attires/Index"); //decide which page you want to redirect and also try and pass a suitable message that the form is submitted
         }
 
         // GET: attires/Details/5
@@ -190,10 +198,7 @@ namespace major_project.Controllers
 
             return View("Index", await _context.attires.Where(a => a.attire.Contains(SearchPhrase)).ToListAsync());
         }
-        public async Task<IActionResult> BorrowGears()
-        {
-            return View();
-        }
+       
         public async Task<IActionResult> returngears()
         {
             return View(); 
@@ -239,7 +244,7 @@ namespace major_project.Controllers
             {
                 System.IO.File.Delete(imagePath);
             }
-            
+
             //Delete the record from the database
             _context.attires.Remove(attires);
             await _context.SaveChangesAsync();

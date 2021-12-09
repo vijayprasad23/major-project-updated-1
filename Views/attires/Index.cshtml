@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<major_project.Models.attires>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Attires List";
 }
 
-<h1>Index</h1>
+<h1>Attires List</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -28,6 +28,8 @@
         </tr>
     </thead>
     <tbody>
+
+
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -54,7 +56,7 @@
                 }
                 else
                 {
-                    <a asp-action="return">
+                    <a asp-controller="Home" asp-action="returngears">
                         <input type="submit" value="Return" class="btn btn-primary" />
                     </a>
                 }

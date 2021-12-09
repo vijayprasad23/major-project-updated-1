@@ -23,6 +23,11 @@ namespace major_project.Controllers
             return View();
         }
 
+        public IActionResult returngears()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

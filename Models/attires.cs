@@ -23,7 +23,9 @@ namespace major_project.Models
         public bool damaged { get; set; }
         [Display(Name ="File Name")]
         public string ImageName { get; set; }
-        [NotMapped]
+        
+        [Required]
+        [NotMapped] // so that this does not get created in the table
         [DisplayName("Upload Image")]
         public IFormFile AttireImage { get; set; }
         public attires()
